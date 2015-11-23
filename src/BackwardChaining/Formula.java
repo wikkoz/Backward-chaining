@@ -6,26 +6,38 @@ import java.util.*;
 
 public class Formula{
 
-    private Set<Sentence> antecedents = new HashSet<>();
+    private Set<Sentence> presumptions = new HashSet<>();
     private Sentence consequent;
+    private boolean used;
 
-    public Formula(IFormula formulas){
-        formulas.getPresumptions()
-                .forEach((s) -> antecedents.add(new Sentence(s)));
+    public Formula(IFormula formulas) {
+
+        Optional.ofNullable(formulas.getPresumptions())
+                .orElse(Collections.emptySet())
+                .forEach(s -> presumptions.add(new Sentence(s)));
         consequent = new Sentence(formulas.getConsequent());
+        used = false;
     }
 
-    public Formula(Set<Sentence> antecedents, Sentence consequent) {
-        this.antecedents = antecedents;
+    public Formula(Set<Sentence> presumptions, Sentence consequent) {
+        this.presumptions = presumptions;
         this.consequent = consequent;
     }
 
-    public Iterable<Sentence> getAntecedents() {
-        return antecedents;
+    public Set<Sentence> getPresumptions() {
+        return presumptions;
     }
 
     public Sentence getConsequent() {
         return consequent;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     @Override
@@ -35,14 +47,13 @@ public class Formula{
 
         Formula formula = (Formula) o;
 
-        if (!antecedents.equals(formula.antecedents)) return false;
-        return consequent.equals(formula.consequent);
+        return consequent.equals(formula.consequent) && presumptions.equals(formula.presumptions);
 
     }
 
     @Override
     public int hashCode() {
-        int result = antecedents.hashCode();
+        int result = presumptions.hashCode();
         result = 31 * result + consequent.hashCode();
         return result;
     }

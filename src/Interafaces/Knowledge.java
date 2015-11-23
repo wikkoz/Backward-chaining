@@ -1,12 +1,11 @@
 package Interafaces;
 
-public abstract class Knowledge implements IFormula{
-    Iterable<IFormula> formulas;
-    Iterable<String> facts;
-    String thesis;
-
-    public abstract Iterable<String> getFacts();
+public abstract class Knowledge{
+    protected Iterable<IFormula> formulas;
+    protected String thesis;
 
     public abstract String getThesis();
+
+    public abstract Iterable<IFormula> getFormulas();
 
 }
