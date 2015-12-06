@@ -4,13 +4,13 @@ import Interafaces.IFormula;
 
 import java.util.*;
 
-public class Formula{
+public class BCFormula {
 
     private Set<Sentence> presumptions = new HashSet<>();
     private Sentence consequent;
     private boolean used;
 
-    public Formula(IFormula formulas) {
+    public BCFormula(IFormula formulas) {
 
         Optional.ofNullable(formulas.getPresumptions())
                 .orElse(Collections.emptySet())
@@ -19,7 +19,7 @@ public class Formula{
         used = false;
     }
 
-    public Formula(Set<Sentence> presumptions, Sentence consequent) {
+    public BCFormula(Set<Sentence> presumptions, Sentence consequent) {
         this.presumptions = presumptions;
         this.consequent = consequent;
     }
@@ -32,12 +32,13 @@ public class Formula{
         return consequent;
     }
 
-    public boolean isUsed() {
-        return used;
+    public boolean isNotUsed() {
+        return !used;
     }
 
     public void setUsed(boolean used) {
-        this.used = used;
+        if(!presumptions.isEmpty())
+            this.used = used;
     }
 
     @Override
@@ -45,9 +46,9 @@ public class Formula{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Formula formula = (Formula) o;
+        BCFormula BCFormula = (BCFormula) o;
 
-        return consequent.equals(formula.consequent) && presumptions.equals(formula.presumptions);
+        return consequent.equals(BCFormula.consequent) && presumptions.equals(BCFormula.presumptions);
 
     }
 

@@ -1,22 +1,25 @@
 package BackwardChaining;
 
-import Interafaces.ISentence;
-
-import java.util.Collections;
-import java.util.List;
-
 public class Sentence {
 
     private String sentence;
     private boolean negated = false;
 
     public Sentence(String sentence) {
-        this.sentence = sentence;
+        if(sentence.charAt(0)=='~') {
+            negated = true;
+            this.sentence = sentence.substring(1);
+        }
+        else
+            this.sentence=sentence;
     }
 
     public Sentence(Sentence sentence) {
-        this.sentence = sentence.getSentence();
+        this.sentence = sentence.getOnlySentence();
+        this.negated = sentence.negated;
     }
+
+    private String getOnlySentence() {return sentence;}
 
     public String getSentence() {
         return (negated ? "~" : "") + sentence;
@@ -34,8 +37,7 @@ public class Sentence {
 
         Sentence sentence1 = (Sentence) o;
 
-        if (negated != sentence1.negated) return false;
-        return sentence.equals(sentence1.sentence);
+        return negated == sentence1.negated && sentence.equals(sentence1.sentence);
 
     }
 
