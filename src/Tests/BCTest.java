@@ -51,4 +51,42 @@ public class BCTest {
         bc.pullOutKnowlegde(knowledge);
         assertEquals(true,bc.confirmThesis());
     }
+
+    @Test
+    public void thirdTest(){
+        formulas.add(new Formula("C&B=>A"));
+        formulas.add(new Formula("D&G=>C"));
+        formulas.add(new Formula("E&F=>D"));
+        formulas.add(new Formula("H&I=>G"));
+        formulas.add(new Formula("G&J=>B"));
+        formulas.add(new Formula("K=>C"));
+        formulas.add(new Formula("H"));
+        formulas.add(new Formula("I"));
+        formulas.add(new Formula("J"));
+        formulas.add(new Formula("E"));
+        formulas.add(new Formula("K"));
+        knowledge.thesis="A";
+        knowledge.formulas = formulas;
+        bc.pullOutKnowlegde(knowledge);
+        assertEquals(true,bc.confirmThesis());
+    }
+
+    @Test
+    public void forthTest(){
+        formulas.add(new Formula("C&B=>A"));
+        formulas.add(new Formula("D&G=>C"));
+        formulas.add(new Formula("E&F=>D"));
+        formulas.add(new Formula("H&I=>G"));
+        formulas.add(new Formula("G&J=>B"));
+        formulas.add(new Formula("K=>C"));
+        formulas.add(new Formula("H"));
+        formulas.add(new Formula("I"));
+        formulas.add(new Formula("J"));
+        formulas.add(new Formula("E"));
+        formulas.add(new Formula("K"));
+        knowledge.thesis="A";
+        knowledge.formulas = formulas;
+        bc.pullOutKnowlegde(knowledge);
+        assertEquals(true,bc.confirmThesis());
+    }
 }

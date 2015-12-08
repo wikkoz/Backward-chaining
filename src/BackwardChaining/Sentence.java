@@ -1,9 +1,14 @@
 package BackwardChaining;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Sentence {
 
     private String sentence;
     private boolean negated = false;
+    private Set<BCFormula> usedFormulas = new HashSet<>();
+
 
     public Sentence(String sentence) {
         if(sentence.charAt(0)=='~') {
@@ -28,6 +33,19 @@ public class Sentence {
     public Sentence negate(){
         negated = ! negated;
         return this;
+    }
+
+
+    public void usedFormula(BCFormula formula){
+        usedFormulas.add(formula);
+    }
+
+    public boolean ifHasNotUsedFormula(BCFormula formula){
+        return !usedFormulas.contains(formula);
+    }
+
+    public void clearUsedFormulas(){
+        usedFormulas.clear();
     }
 
     @Override

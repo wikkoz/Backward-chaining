@@ -34,6 +34,7 @@ public class BackwardChaining implements IBackwardChaining {
 
     private Stream<BCFormula> checkUnconfirmedSentence(Sentence s){
         return implications.findUnusedFormulasWithConsequent(s)
+                .filter(s::ifHasNotUsedFormula)
                 .filter(this::ifHasNotConfirmedPresumptions);
     }
 
@@ -55,6 +56,7 @@ public class BackwardChaining implements IBackwardChaining {
     private void confirmConsequent(BCFormula formula){
         formula.setUsed(true);
         Sentence consequent = formula.getConsequent();
+        consequent.usedFormula(formula);
         confirmed.put(consequent, unconfirmed.get(consequent));
         unconfirmed.remove(consequent);
         usedBCFormulas.add(formula);
@@ -63,30 +65,46 @@ public class BackwardChaining implements IBackwardChaining {
 
     private void reverseLastStep() throws EmptyStackException{
         BCFormula formula;
+        List<Sentence> confirmedPresumptions = new ArrayList<>();
         do {
             formula = usedBCFormulas.pop();
             formula.getPresumptions().iterator().forEachRemaining(this::decrementUnconfirmed);
             Sentence consequent = formula.getConsequent();
             unconfirmed.put(consequent, confirmed.get(consequent));
             confirmed.remove(formula.getConsequent());
+            confirmedPresumptions.add(formula.getConsequent());
+            formula.getPresumptions().stream().forEach(Sentence::clearUsedFormulas);
         }while(formula.isNotUsed());
-
+            if(formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
+                formula.setUsed(false);
+            }
     }
 
-    public boolean confirmThesis(){
-        while(unconfirmed.size()!=0) {
-            if (findFormula().isPresent())
-                confirmConsequent(findFormula().get());
+    private boolean checkIfPeekHasAnotherFormula(){
+        return !usedBCFormulas.isEmpty() &&
+                checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
+    }
+
+    private void findOutIfThesisCanBeConfirmed() throws EmptyStackException {
+        while (unconfirmed.size() != 0) {
+            Optional<BCFormula> formula = findFormula();
+            if (formula.isPresent())
+                confirmConsequent(formula.get());
             else {
-                try {
+                do {
                     reverseLastStep();
-                }
-                catch (EmptyStackException e){
-                    return false;
-                }
+                } while (checkIfPeekHasAnotherFormula());
             }
         }
-        return  true;
+    }
+
+    public boolean confirmThesis() {
+        try {
+            findOutIfThesisCanBeConfirmed();
+        } catch (EmptyStackException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
