@@ -89,4 +89,19 @@ public class BCTest {
         bc.pullOutKnowlegde(knowledge);
         assertEquals(true,bc.confirmThesis());
     }
+
+    @Test
+    public void fifthTest(){
+        formulas.add(new Formula("A&B=>C"));
+        formulas.add(new Formula("B=>D"));
+        formulas.add(new Formula("C=>~D"));
+        formulas.add(new Formula("~D=>C"));
+        formulas.add(new Formula("C=>E"));
+        formulas.add(new Formula("D=>~E"));
+        formulas.add(new Formula("E"));
+        knowledge.thesis="~B";
+        knowledge.formulas = formulas;
+        bc.pullOutKnowlegde(knowledge);
+        assertEquals(true,bc.confirmThesis());
+    }
 }

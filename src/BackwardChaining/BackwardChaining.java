@@ -107,10 +107,14 @@ public class BackwardChaining implements IBackwardChaining {
         return true;
     }
 
+
     @Override
     public ISentence deduce(IKnowledge IKnowledge) {
         pullOutKnowlegde(IKnowledge);
-        confirmThesis();
+        if(confirmThesis()){
+            Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis()));
+            return tree.makeTree();
+        }
         return null;
     }
 }

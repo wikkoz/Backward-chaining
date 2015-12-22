@@ -1,9 +1,13 @@
 package BackwardChaining;
 
+import Interafaces.ISentence;
+
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class Sentence {
+public class Sentence implements ISentence{
 
     private String sentence;
     private boolean negated = false;
@@ -25,6 +29,11 @@ public class Sentence {
     }
 
     private String getOnlySentence() {return sentence;}
+
+    @Override
+    public List<ISentence> getAntecedents() {
+        return Collections.emptyList();
+    }
 
     public String getSentence() {
         return (negated ? "~" : "") + sentence;
