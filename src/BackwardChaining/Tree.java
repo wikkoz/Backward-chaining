@@ -13,15 +13,15 @@ public class Tree {
     private Map<Sentence, BCFormula> usedImplications = new HashMap<>();
 
     public Tree(Stack<BCFormula> usedFormulas, Sentence thesis) {
-        usedFormulas.stream().forEach(f-> usedImplications.put(f.getConsequent(),f));
+        usedFormulas.stream().forEach(f -> usedImplications.put(f.getConsequent(), f));
         this.thesis = thesis;
     }
 
-    private ISentence addNode(Sentence sentence){
+    private ISentence addNode(Sentence sentence) {
         BCFormula formula = usedImplications.get(sentence);
-        if(!formula.getPresumptions().isEmpty()){
+        if (!formula.getPresumptions().isEmpty()) {
             CompositeSentence compositeSentence = new CompositeSentence(sentence);
-            for(Sentence presumption: formula.getPresumptions()){
+            for (Sentence presumption : formula.getPresumptions()) {
                 compositeSentence.addAntecedent(addNode(presumption));
             }
             return compositeSentence;
@@ -29,7 +29,7 @@ public class Tree {
         return sentence;
     }
 
-    public ISentence makeTree(){
+    public ISentence makeTree() {
         root = addNode(thesis);
         return root;
     }

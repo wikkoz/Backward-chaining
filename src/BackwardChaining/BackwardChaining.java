@@ -2,8 +2,8 @@ package BackwardChaining;
 
 import Interafaces.IBackwardChaining;
 import Interafaces.IFormula;
-import Interafaces.ISentence;
 import Interafaces.IKnowledge;
+import Interafaces.ISentence;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -16,7 +16,7 @@ public class BackwardChaining implements IBackwardChaining {
     private Map<Sentence, Integer> confirmed = new HashMap<>();
     private Stack<BCFormula> usedBCFormulas = new Stack<>();
 
-    private void makeCompleteKnowledge(Iterable<IFormula> knowledge){
+    private void makeCompleteKnowledge(Iterable<IFormula> knowledge) {
         StreamSupport.stream(knowledge.spliterator(), false)
                 .map(BCFormula::new)
                 .forEach(implications::makeAllPossibleImplications);
@@ -27,33 +27,33 @@ public class BackwardChaining implements IBackwardChaining {
         unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
     }
 
-    private boolean ifHasNotConfirmedPresumptions(BCFormula formula){
+    private boolean ifHasNotConfirmedPresumptions(BCFormula formula) {
         return StreamSupport.stream(formula.getPresumptions().spliterator(), false)
                 .noneMatch(confirmed.keySet()::contains);
     }
 
-    private Stream<BCFormula> checkUnconfirmedSentence(Sentence s){
+    private Stream<BCFormula> checkUnconfirmedSentence(Sentence s) {
         return implications.findUnusedFormulasWithConsequent(s)
                 .filter(s::ifHasNotUsedFormula)
                 .filter(this::ifHasNotConfirmedPresumptions);
     }
 
-    private void incrementUnconfirmed(Sentence sentence){
-        unconfirmed.compute(sentence, (k, v) -> v==null ? 1: ++v);
+    private void incrementUnconfirmed(Sentence sentence) {
+        unconfirmed.compute(sentence, (k, v) -> v == null ? 1 : ++v);
     }
 
-    private void decrementUnconfirmed(Sentence sentence){
-        unconfirmed.compute(sentence, (k,v) -> --v);
+    private void decrementUnconfirmed(Sentence sentence) {
+        unconfirmed.compute(sentence, (k, v) -> --v);
         unconfirmed.remove(sentence, 0);
     }
 
-    public Optional<BCFormula> findFormula(){
+    public Optional<BCFormula> findFormula() {
         return unconfirmed.keySet().stream()
                 .flatMap(this::checkUnconfirmedSentence)
                 .findAny();
     }
 
-    private void confirmConsequent(BCFormula formula){
+    private void confirmConsequent(BCFormula formula) {
         formula.setUsed(true);
         Sentence consequent = formula.getConsequent();
         consequent.usedFormula(formula);
@@ -63,7 +63,7 @@ public class BackwardChaining implements IBackwardChaining {
         formula.getPresumptions().iterator().forEachRemaining(this::incrementUnconfirmed);
     }
 
-    private void reverseLastStep() throws EmptyStackException{
+    private void reverseLastStep() throws EmptyStackException {
         BCFormula formula;
         List<Sentence> confirmedPresumptions = new ArrayList<>();
         do {
@@ -74,13 +74,13 @@ public class BackwardChaining implements IBackwardChaining {
             confirmed.remove(formula.getConsequent());
             confirmedPresumptions.add(formula.getConsequent());
             formula.getPresumptions().stream().forEach(Sentence::clearUsedFormulas);
-        }while(formula.isNotUsed());
-            if(formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
-                formula.setUsed(false);
-            }
+        } while (formula.isNotUsed());
+        if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
+            formula.setUsed(false);
+        }
     }
 
-    private boolean checkIfPeekHasAnotherFormula(){
+    private boolean checkIfPeekHasAnotherFormula() {
         return !usedBCFormulas.isEmpty() &&
                 checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
     }
@@ -107,7 +107,7 @@ public class BackwardChaining implements IBackwardChaining {
         return true;
     }
 
-    public void clear(){
+    public void clear() {
         implications.clear();
         unconfirmed.clear();
         confirmed.clear();
@@ -118,7 +118,7 @@ public class BackwardChaining implements IBackwardChaining {
     public ISentence deduce(IKnowledge IKnowledge) {
         clear();
         pullOutKnowlegde(IKnowledge);
-        if(confirmThesis()){
+        if (confirmThesis()) {
             Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis()));
             return tree.makeTree();
         }

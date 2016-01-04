@@ -1,4 +1,4 @@
 package Events;
 
-public class ApplicationEvent
-{}
+public class ApplicationEvent {
+}

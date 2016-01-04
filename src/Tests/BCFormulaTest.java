@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BCFormulaTest {
     @Test
-    public void testConsequent(){
+    public void testConsequent() {
         Formula formula = new Formula("A");
         BCFormula bcFormula = new BCFormula(formula);
         assertTrue(bcFormula.getPresumptions().isEmpty());
@@ -18,7 +18,7 @@ public class BCFormulaTest {
     }
 
     @Test
-    public void testBCFormula(){
+    public void testBCFormula() {
         Formula formula = new Formula("A&B=>C");
         BCFormula bcFormula = new BCFormula(formula);
         assertEquals("C", bcFormula.getConsequent().getSentence());

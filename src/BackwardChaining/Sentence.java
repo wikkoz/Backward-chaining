@@ -7,21 +7,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Sentence implements ISentence{
+public class Sentence implements ISentence {
 
     private String sentence;
     private boolean negated = false;
     private Set<BCFormula> usedFormulas = new HashSet<>();
 
-    public Sentence() {}
+    public Sentence() {
+    }
 
     public Sentence(String sentence) {
-        if(sentence.charAt(0)=='~') {
+        if (sentence.charAt(0) == '~') {
             negated = true;
             this.sentence = sentence.substring(1);
-        }
-        else
-            this.sentence=sentence;
+        } else
+            this.sentence = sentence;
     }
 
     public Sentence(Sentence sentence) {
@@ -29,7 +29,9 @@ public class Sentence implements ISentence{
         this.negated = sentence.negated;
     }
 
-    private String getOnlySentence() {return sentence;}
+    private String getOnlySentence() {
+        return sentence;
+    }
 
     @Override
     public List<ISentence> getAntecedents() {
@@ -40,21 +42,21 @@ public class Sentence implements ISentence{
         return (negated ? "~" : "") + sentence;
     }
 
-    public Sentence negate(){
-        negated = ! negated;
+    public Sentence negate() {
+        negated = !negated;
         return this;
     }
 
 
-    public void usedFormula(BCFormula formula){
+    public void usedFormula(BCFormula formula) {
         usedFormulas.add(formula);
     }
 
-    public boolean ifHasNotUsedFormula(BCFormula formula){
+    public boolean ifHasNotUsedFormula(BCFormula formula) {
         return !usedFormulas.contains(formula);
     }
 
-    public void clearUsedFormulas(){
+    public void clearUsedFormulas() {
         usedFormulas.clear();
     }
 

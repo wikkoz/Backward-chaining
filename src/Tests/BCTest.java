@@ -16,16 +16,16 @@ import static junit.framework.TestCase.assertEquals;
 public class BCTest {
     private Knowledge knowledge = new Knowledge();
     private List<IFormula> formulas;
-    private BackwardChaining bc ;
+    private BackwardChaining bc;
 
     @Before
-    public void init(){
-        formulas= new ArrayList<>();
+    public void init() {
+        formulas = new ArrayList<>();
         bc = new BackwardChaining();
     }
 
     @Test
-    public void firstTest(){
+    public void firstTest() {
         Formula formula = new Formula("A&B=>C");
         formulas.add(formula);
         formulas.add(new Formula("A"));
@@ -37,7 +37,7 @@ public class BCTest {
     }
 
     @Test
-    public void secondTest(){
+    public void secondTest() {
         formulas.add(new Formula("D&B=>C"));
         formulas.add(new Formula("E&J=>C"));
         formulas.add(new Formula("G&K=>C"));
@@ -48,11 +48,11 @@ public class BCTest {
         knowledge.setThesis("C");
         knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
-        assertEquals(true,bc.confirmThesis());
+        assertEquals(true, bc.confirmThesis());
     }
 
     @Test
-    public void thirdTest(){
+    public void thirdTest() {
         formulas.add(new Formula("C&B=>A"));
         formulas.add(new Formula("D&G=>C"));
         formulas.add(new Formula("E&F=>D"));
@@ -67,11 +67,11 @@ public class BCTest {
         knowledge.setThesis("A");
         knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
-        assertEquals(true,bc.confirmThesis());
+        assertEquals(true, bc.confirmThesis());
     }
 
     @Test
-    public void forthTest(){
+    public void forthTest() {
         formulas.add(new Formula("C&B=>A"));
         formulas.add(new Formula("D&G=>C"));
         formulas.add(new Formula("E&F=>D"));
@@ -86,11 +86,11 @@ public class BCTest {
         knowledge.setThesis("A");
         knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
-        assertEquals(true,bc.confirmThesis());
+        assertEquals(true, bc.confirmThesis());
     }
 
     @Test
-    public void fifthTest(){
+    public void fifthTest() {
         formulas.add(new Formula("A&B=>C"));
         formulas.add(new Formula("B=>D"));
         formulas.add(new Formula("C=>~D"));
@@ -101,6 +101,6 @@ public class BCTest {
         knowledge.setThesis("~B");
         knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
-        assertEquals(true,bc.confirmThesis());
+        assertEquals(true, bc.confirmThesis());
     }
 }

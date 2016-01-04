@@ -2,7 +2,10 @@ package BackwardChaining;
 
 import Interafaces.IFormula;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 public class BCFormula {
 
@@ -37,7 +40,7 @@ public class BCFormula {
     }
 
     public void setUsed(boolean used) {
-        if(!presumptions.isEmpty())
+        if (!presumptions.isEmpty())
             this.used = used;
     }
 

@@ -11,9 +11,9 @@ public class CompositeSentence implements ISentence {
     private Sentence sentence;
 
 
-    public CompositeSentence(Sentence sentence){
+    public CompositeSentence(Sentence sentence) {
         this.sentence = sentence;
-        antecedents= new ArrayList<>();
+        antecedents = new ArrayList<>();
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CompositeSentence implements ISentence {
         return sentence.getSentence();
     }
 
-    public void addAntecedent (ISentence sentence){
+    public void addAntecedent(ISentence sentence) {
         antecedents.add(sentence);
     }
 
