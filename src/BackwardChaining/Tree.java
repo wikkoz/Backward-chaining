@@ -1,7 +1,6 @@
 package BackwardChaining;
 
 import Interafaces.ISentence;
-import Model.Formula;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class Tree {
     }
 
     private ISentence addNode(Sentence sentence){
-        BCFormula formula = usedImplications.remove(sentence);
+        BCFormula formula = usedImplications.get(sentence);
         if(!formula.getPresumptions().isEmpty()){
             CompositeSentence compositeSentence = new CompositeSentence(sentence);
             for(Sentence presumption: formula.getPresumptions()){

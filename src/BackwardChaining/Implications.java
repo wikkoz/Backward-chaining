@@ -33,4 +33,7 @@ public class Implications {
         return implications.getOrDefault(sentence, Collections.emptyList()).stream()
                 .filter(BCFormula::isNotUsed);
     }
+
+    public void clear(){ implications.clear();}
+
 }

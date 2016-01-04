@@ -13,6 +13,7 @@ public class Sentence implements ISentence{
     private boolean negated = false;
     private Set<BCFormula> usedFormulas = new HashSet<>();
 
+    public Sentence() {}
 
     public Sentence(String sentence) {
         if(sentence.charAt(0)=='~') {

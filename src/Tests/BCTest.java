@@ -1,11 +1,10 @@
 package Tests;
 
-import BackwardChaining.BackwardChaining;
 import BackwardChaining.BCFormula;
+import BackwardChaining.BackwardChaining;
 import Interafaces.IFormula;
 import Model.Formula;
 import Model.Knowledge;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,8 +30,8 @@ public class BCTest {
         formulas.add(formula);
         formulas.add(new Formula("A"));
         formulas.add(new Formula("B"));
-        knowledge.thesis="C";
-        knowledge.formulas=formulas;
+        knowledge.setThesis("C");
+        knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
         assertEquals(bc.findFormula().get(), new BCFormula(formula));
     }
@@ -46,8 +45,8 @@ public class BCTest {
         formulas.add(new Formula("A"));
         formulas.add(new Formula("B"));
         formulas.add(new Formula("G"));
-        knowledge.thesis="C";
-        knowledge.formulas = formulas;
+        knowledge.setThesis("C");
+        knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
         assertEquals(true,bc.confirmThesis());
     }
@@ -65,8 +64,8 @@ public class BCTest {
         formulas.add(new Formula("J"));
         formulas.add(new Formula("E"));
         formulas.add(new Formula("K"));
-        knowledge.thesis="A";
-        knowledge.formulas = formulas;
+        knowledge.setThesis("A");
+        knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
         assertEquals(true,bc.confirmThesis());
     }
@@ -84,8 +83,8 @@ public class BCTest {
         formulas.add(new Formula("J"));
         formulas.add(new Formula("E"));
         formulas.add(new Formula("K"));
-        knowledge.thesis="A";
-        knowledge.formulas = formulas;
+        knowledge.setThesis("A");
+        knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
         assertEquals(true,bc.confirmThesis());
     }
@@ -99,8 +98,8 @@ public class BCTest {
         formulas.add(new Formula("C=>E"));
         formulas.add(new Formula("D=>~E"));
         formulas.add(new Formula("E"));
-        knowledge.thesis="~B";
-        knowledge.formulas = formulas;
+        knowledge.setThesis("~B");
+        knowledge.setFormulas(formulas);
         bc.pullOutKnowlegde(knowledge);
         assertEquals(true,bc.confirmThesis());
     }
