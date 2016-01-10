@@ -47,15 +47,10 @@ public class Controller {
 
         @Override
         void work(ApplicationEvent applicationEvent) {
-            System.out.println(((ButtonEvent) applicationEvent).getDataString());
             String dataString = ((ButtonEvent) applicationEvent).getDataString();
             Knowledge knowledge = new Knowledge(dataString);
             ISentence result = backwardChaining.deduce(knowledge);
-            buildJtree(result);
-        }
-
-        private void buildJtree(ISentence results) {
-            addNode(results, null);
+            addNode(result, null);
         }
 
         private void addNode(ISentence currentNode, DefaultMutableTreeNode parent) {

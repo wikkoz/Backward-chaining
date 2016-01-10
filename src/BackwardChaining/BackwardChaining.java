@@ -76,6 +76,7 @@ public class BackwardChaining implements IBackwardChaining {
             formula.getPresumptions().stream().forEach(Sentence::clearUsedFormulas);
         } while (formula.isNotUsed());
         if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
+            formula.getConsequent().clearUsedFormulas();
             formula.setUsed(false);
         }
     }
