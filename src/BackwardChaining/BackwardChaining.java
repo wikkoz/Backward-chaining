@@ -22,7 +22,7 @@ public class BackwardChaining implements IBackwardChaining {
                 .forEach(implications::makeAllPossibleImplications);
     }
 
-    public void pullOutKnowlegde(IKnowledge IKnowledge) {
+    public void pullOutKnowledge(IKnowledge IKnowledge) {
         makeCompleteKnowledge(IKnowledge.getFormulas());
         unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
     }
@@ -77,6 +77,10 @@ public class BackwardChaining implements IBackwardChaining {
             confirmedPresumptions.add(formula.getConsequent());
             formula.getPresumptions().stream().forEach(Sentence::clearUsedFormulas);
         } while (formula.isNotUsed());
+        checkIfContains(formula, confirmedPresumptions);
+    }
+
+    private void checkIfContains(BCFormula formula, List<Sentence> confirmedPresumptions) {
         if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
             formula.getConsequent().clearUsedFormulas();
             formula.setUsed(false);
@@ -97,21 +101,18 @@ public class BackwardChaining implements IBackwardChaining {
             if (formula.isPresent())
                 confirmConsequent(formula.get());
             else {
-                reverse();
+                do {
+                    reverseLastStep();
+                } while (checkIfPeekHasAnotherFormula());
             }
         }
-    }
-
-    private void reverse() {
-        do {
-            reverseLastStep();
-        } while (checkIfPeekHasAnotherFormula());
     }
 
     public boolean confirmThesis() {
         try {
             findOutIfThesisCanBeConfirmed();
         } catch (EmptyStackException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -127,7 +128,7 @@ public class BackwardChaining implements IBackwardChaining {
     @Override
     public ISentence deduce(IKnowledge IKnowledge) {
         clear();
-        pullOutKnowlegde(IKnowledge);
+        pullOutKnowledge(IKnowledge);
         if (confirmThesis()) {
             Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis()));
             return tree.makeTree();

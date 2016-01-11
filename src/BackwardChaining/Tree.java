@@ -10,9 +10,10 @@ public class Tree {
 
     private ISentence root;
     private Sentence thesis;
-    private Map<Sentence, BCFormula> usedImplications = new HashMap<>();
+    private Map<Sentence, BCFormula> usedImplications;
 
     public Tree(Stack<BCFormula> usedFormulas, Sentence thesis) {
+        usedImplications = new HashMap<>();
         usedFormulas.stream().forEach(f -> usedImplications.put(f.getConsequent(), f));
         this.thesis = thesis;
     }
