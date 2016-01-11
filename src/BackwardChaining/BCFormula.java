@@ -19,7 +19,6 @@ public class BCFormula {
                 .orElse(Collections.emptySet())
                 .forEach(s -> presumptions.add(new Sentence(s)));
         consequent = new Sentence(formulas.getConsequent());
-        used = false;
     }
 
     public BCFormula(Set<Sentence> presumptions, Sentence consequent) {

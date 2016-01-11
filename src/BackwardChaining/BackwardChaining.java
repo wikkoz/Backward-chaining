@@ -60,7 +60,9 @@ public class BackwardChaining implements IBackwardChaining {
         confirmed.put(consequent, unconfirmed.get(consequent));
         unconfirmed.remove(consequent);
         usedBCFormulas.add(formula);
-        formula.getPresumptions().iterator().forEachRemaining(this::incrementUnconfirmed);
+        formula.getPresumptions()
+                .iterator()
+                .forEachRemaining(this::incrementUnconfirmed);
     }
 
     private void reverseLastStep() throws EmptyStackException {
@@ -82,8 +84,11 @@ public class BackwardChaining implements IBackwardChaining {
     }
 
     private boolean checkIfPeekHasAnotherFormula() {
-        return !usedBCFormulas.isEmpty() &&
-                checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
+        return !usedBCFormulas.isEmpty() && isPresent();
+    }
+
+    private boolean isPresent() {
+        return checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
     }
 
     private void findOutIfThesisCanBeConfirmed() throws EmptyStackException {
@@ -92,11 +97,15 @@ public class BackwardChaining implements IBackwardChaining {
             if (formula.isPresent())
                 confirmConsequent(formula.get());
             else {
-                do {
-                    reverseLastStep();
-                } while (checkIfPeekHasAnotherFormula());
+                reverse();
             }
         }
+    }
+
+    private void reverse() {
+        do {
+            reverseLastStep();
+        } while (checkIfPeekHasAnotherFormula());
     }
 
     public boolean confirmThesis() {
