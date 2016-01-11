@@ -9,16 +9,20 @@ import java.util.Set;
 
 public class BCFormula {
 
-    private Set<Sentence> presumptions = new HashSet<>();
+    private Set<Sentence> presumptions;
     private Sentence consequent;
     private boolean used;
 
     public BCFormula(IFormula formulas) {
+        presumptions = new HashSet<>();
+        addSentences(formulas);
+        consequent = new Sentence(formulas.getConsequent());
+    }
 
+    private void addSentences(IFormula formulas) {
         Optional.ofNullable(formulas.getPresumptions())
                 .orElse(Collections.emptySet())
                 .forEach(s -> presumptions.add(new Sentence(s)));
-        consequent = new Sentence(formulas.getConsequent());
     }
 
     public BCFormula(Set<Sentence> presumptions, Sentence consequent) {
