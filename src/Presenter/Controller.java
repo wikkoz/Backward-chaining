@@ -10,6 +10,7 @@ import View.View;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
@@ -20,7 +21,6 @@ public class Controller {
     private IBackwardChaining backwardChaining = new BackwardChaining();
 
     public Controller(BlockingQueue<ApplicationEvent> eventQueue, View view) {
-        super();
         this.eventQueue = eventQueue;
         this.view = view;
         MapStrategy = new HashMap<>();
@@ -39,14 +39,14 @@ public class Controller {
         }
     }
 
-    abstract class AppStrategy {
-        abstract void work(ApplicationEvent applicationEvent);
+    interface AppStrategy {
+        void work(ApplicationEvent applicationEvent);
     }
 
-    class ButtonStrategy extends AppStrategy {
+    class ButtonStrategy implements AppStrategy {
 
         @Override
-        void work(ApplicationEvent applicationEvent) {
+        public void work(ApplicationEvent applicationEvent) {
             String dataString = ((ButtonEvent) applicationEvent).getDataString();
             Knowledge knowledge = new Knowledge(dataString);
             ISentence result = backwardChaining.deduce(knowledge);
@@ -54,11 +54,11 @@ public class Controller {
         }
 
         private void addNode(ISentence currentNode, DefaultMutableTreeNode parent) {
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode(currentNode.getSentence());
+            String sentence = currentNode.getSentence();
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(sentence);
             view.addChild(parent, node);
-            for (ISentence child : currentNode.getAntecedents()) {
-                addNode(child, node);
-            }
+            currentNode.getAntecedents().stream()
+                        .forEach(s -> addNode(s, node));
         }
     }
 
