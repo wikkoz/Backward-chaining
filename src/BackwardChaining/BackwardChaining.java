@@ -52,7 +52,6 @@ public class BackwardChaining implements IBackwardChaining {
                 .flatMap(this::checkUnconfirmedSentence)
                 .findAny();
     }
-
     private void confirmConsequent(BCFormula formula) {
         formula.setUsed(true);
         Sentence consequent = formula.getConsequent();
@@ -82,7 +81,7 @@ public class BackwardChaining implements IBackwardChaining {
     }
 
     private boolean checkIfPeekHasAnotherFormula() {
-        return !usedBCFormulas.isEmpty() &&
+        return !usedBCFormulas.isEmpty() && !usedBCFormulas.peek().isNotUsed() &&
                 checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
     }
 
