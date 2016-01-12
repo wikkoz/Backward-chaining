@@ -32,7 +32,7 @@ public class BCTest {
         formulas.add(new Formula("B"));
         knowledge.setThesis("C");
         knowledge.setFormulas(formulas);
-        bc.pullOutKnowlegde(knowledge);
+        bc.pullOutKnowledge(knowledge);
         assertEquals(bc.findFormula().get(), new BCFormula(formula));
     }
 
@@ -47,7 +47,7 @@ public class BCTest {
         formulas.add(new Formula("G"));
         knowledge.setThesis("C");
         knowledge.setFormulas(formulas);
-        bc.pullOutKnowlegde(knowledge);
+        bc.pullOutKnowledge(knowledge);
         assertEquals(true, bc.confirmThesis());
     }
 
@@ -66,7 +66,7 @@ public class BCTest {
         formulas.add(new Formula("K"));
         knowledge.setThesis("A");
         knowledge.setFormulas(formulas);
-        bc.pullOutKnowlegde(knowledge);
+        bc.pullOutKnowledge(knowledge);
         assertEquals(true, bc.confirmThesis());
     }
 
@@ -85,7 +85,7 @@ public class BCTest {
         formulas.add(new Formula("K"));
         knowledge.setThesis("A");
         knowledge.setFormulas(formulas);
-        bc.pullOutKnowlegde(knowledge);
+        bc.pullOutKnowledge(knowledge);
         assertEquals(true, bc.confirmThesis());
     }
 
@@ -100,7 +100,7 @@ public class BCTest {
         formulas.add(new Formula("E"));
         knowledge.setThesis("~B");
         knowledge.setFormulas(formulas);
-        bc.pullOutKnowlegde(knowledge);
+        bc.pullOutKnowledge(knowledge);
         assertEquals(true, bc.confirmThesis());
     }
 }

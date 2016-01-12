@@ -8,20 +8,24 @@ public class Implications {
 
     private Map<Sentence, List<BCFormula>> implications = new HashMap<>();
 
-    public Map<Sentence, List<BCFormula>> makeAllPossibleImplications(BCFormula formula) {
+    public Optional<Map<Sentence, List<BCFormula>>> makeAllPossibleImplications(BCFormula formula) {
         addElement(formula);
-        StreamSupport.stream(formula.getPresumptions().spliterator(), false)
-                .map(s -> makeAntecedentAsConsequent(s, formula))
-                .forEach(this::addElement);
-        return implications;
+        addFormulas(formula);
+        return Optional.of(implications);
     }
 
-    private BCFormula makeAntecedentAsConsequent(Sentence antecedent, BCFormula formula) {
+    private void addFormulas(BCFormula formula) {
+        StreamSupport.stream(formula.getPresumptions().spliterator(), false)
+                .map(s -> makeAntecedentAsConsequent(s, formula))
+                .forEach(s -> addElement(s.get()));
+    }
+
+    private Optional<BCFormula> makeAntecedentAsConsequent(Sentence antecedent, BCFormula formula) {
         Set<Sentence> newAntecedents = new HashSet<>();
         formula.getPresumptions().forEach(newAntecedents::add);
         newAntecedents.remove(antecedent);
         newAntecedents.add(new Sentence(formula.getConsequent()).negate());
-        return new BCFormula(newAntecedents, new Sentence(antecedent).negate());
+        return Optional.of(new BCFormula(newAntecedents, new Sentence(antecedent).negate()));
     }
 
     private void addElement(BCFormula formula) {

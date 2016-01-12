@@ -4,7 +4,6 @@ import Interafaces.IFormula;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class BCFormula {
@@ -14,12 +13,14 @@ public class BCFormula {
     private boolean used;
 
     public BCFormula(IFormula formulas) {
+        addSentences(formulas);
+        consequent = new Sentence(formulas.getConsequent().get());
+    }
 
-        Optional.ofNullable(formulas.getPresumptions())
+    private void addSentences(IFormula formulas) {
+        formulas.getPresumptions()
                 .orElse(Collections.emptySet())
                 .forEach(s -> presumptions.add(new Sentence(s)));
-        consequent = new Sentence(formulas.getConsequent());
-        used = false;
     }
 
     public BCFormula(Set<Sentence> presumptions, Sentence consequent) {

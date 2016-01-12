@@ -2,10 +2,7 @@ package Model;
 
 import Interafaces.IFormula;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Formula implements IFormula {
 
@@ -22,12 +19,12 @@ public class Formula implements IFormula {
     }
 
     @Override
-    public Collection<String> getPresumptions() {
-        return presumptions;
+    public Optional<Collection<String>> getPresumptions() {
+        return Optional.of(presumptions);
     }
 
     @Override
-    public String getConsequent() {
-        return consequent;
+    public Optional<String> getConsequent() {
+        return Optional.of(consequent);
     }
 }

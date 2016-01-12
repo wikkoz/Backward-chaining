@@ -6,6 +6,7 @@ import Interafaces.IKnowledge;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class Knowledge implements IKnowledge {
     private String thesis;
@@ -24,8 +25,8 @@ public class Knowledge implements IKnowledge {
     }
 
     @Override
-    public String getThesis() {
-        return thesis;
+    public Optional<String> getThesis() {
+        return Optional.of(thesis);
     }
 
     public void setThesis(String thesis) {
@@ -33,8 +34,8 @@ public class Knowledge implements IKnowledge {
     }
 
     @Override
-    public Collection<IFormula> getFormulas() {
-        return formulas;
+    public Optional<Collection<IFormula>> getFormulas() {
+        return Optional.of(formulas);
     }
 
     public void setFormulas(List<IFormula> formulas) {

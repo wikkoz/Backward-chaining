@@ -4,25 +4,25 @@ import Interafaces.ISentence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CompositeSentence implements ISentence {
 
     private List<ISentence> antecedents;
     private Sentence sentence;
 
-
     public CompositeSentence(Sentence sentence) {
         this.sentence = sentence;
-        antecedents = new ArrayList<>();
+        this.antecedents = new ArrayList<>();
     }
 
     @Override
-    public List<ISentence> getAntecedents() {
-        return antecedents;
+    public Optional<List<ISentence>> getAntecedents() {
+        return Optional.of(antecedents);
     }
 
     @Override
-    public String getSentence() {
+    public Optional<String> getSentence() {
         return sentence.getSentence();
     }
 

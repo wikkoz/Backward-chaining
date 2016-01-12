@@ -22,9 +22,9 @@ public class BackwardChaining implements IBackwardChaining {
                 .forEach(implications::makeAllPossibleImplications);
     }
 
-    public void pullOutKnowlegde(IKnowledge IKnowledge) {
-        makeCompleteKnowledge(IKnowledge.getFormulas());
-        unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
+    public void pullOutKnowledge(IKnowledge IKnowledge) {
+        makeCompleteKnowledge(IKnowledge.getFormulas().get());
+        unconfirmed.put(new Sentence(IKnowledge.getThesis().get()), 1);
     }
 
     private boolean ifHasNotConfirmedPresumptions(BCFormula formula) {
@@ -60,7 +60,9 @@ public class BackwardChaining implements IBackwardChaining {
         confirmed.put(consequent, unconfirmed.get(consequent));
         unconfirmed.remove(consequent);
         usedBCFormulas.add(formula);
-        formula.getPresumptions().iterator().forEachRemaining(this::incrementUnconfirmed);
+        formula.getPresumptions()
+                .iterator()
+                .forEachRemaining(this::incrementUnconfirmed);
     }
 
     private void reverseLastStep() throws EmptyStackException {
@@ -75,6 +77,10 @@ public class BackwardChaining implements IBackwardChaining {
             confirmedPresumptions.add(formula.getConsequent());
             formula.getPresumptions().stream().forEach(Sentence::clearUsedFormulas);
         } while (formula.isNotUsed());
+        checkIfContains(formula, confirmedPresumptions);
+    }
+
+    private void checkIfContains(BCFormula formula, List<Sentence> confirmedPresumptions) {
         if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
             formula.getConsequent().clearUsedFormulas();
             formula.setUsed(false);
@@ -82,8 +88,11 @@ public class BackwardChaining implements IBackwardChaining {
     }
 
     private boolean checkIfPeekHasAnotherFormula() {
-        return !usedBCFormulas.isEmpty() &&
-                checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
+        return !usedBCFormulas.isEmpty() && isPresent();
+    }
+
+    private boolean isPresent() {
+        return checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
     }
 
     private void findOutIfThesisCanBeConfirmed() throws EmptyStackException {
@@ -103,6 +112,7 @@ public class BackwardChaining implements IBackwardChaining {
         try {
             findOutIfThesisCanBeConfirmed();
         } catch (EmptyStackException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -116,13 +126,13 @@ public class BackwardChaining implements IBackwardChaining {
     }
 
     @Override
-    public ISentence deduce(IKnowledge IKnowledge) {
+    public Optional<ISentence> deduce(IKnowledge IKnowledge) {
         clear();
-        pullOutKnowlegde(IKnowledge);
+        pullOutKnowledge(IKnowledge);
         if (confirmThesis()) {
-            Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis()));
+            Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis().get()));
             return tree.makeTree();
         }
-        return new Sentence();
+        return Optional.of(new Sentence());
     }
 }

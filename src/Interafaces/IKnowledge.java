@@ -1,9 +1,9 @@
 package Interafaces;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface IKnowledge {
-    String getThesis();
-
-    Collection<IFormula> getFormulas();
+    Optional<String> getThesis();
+    Optional<Collection<IFormula>> getFormulas();
 }

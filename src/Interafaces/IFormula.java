@@ -1,9 +1,9 @@
 package Interafaces;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface IFormula {
-    Collection<String> getPresumptions();
-
-    String getConsequent();
+    Optional<Collection<String>> getPresumptions();
+    Optional<String> getConsequent();
 }

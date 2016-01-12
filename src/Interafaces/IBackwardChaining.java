@@ -1,5 +1,7 @@
 package Interafaces;
 
+import java.util.Optional;
+
 public interface IBackwardChaining {
-    ISentence deduce(IKnowledge IKnowledge);
+    Optional<ISentence> deduce(IKnowledge IKnowledge);
 }

@@ -5,6 +5,7 @@ import Events.ApplicationEvent;
 import Events.ButtonEvent;
 import Interafaces.IBackwardChaining;
 import Interafaces.ISentence;
+import Interafaces.IStrategy;
 import Model.Knowledge;
 import View.View;
 
@@ -15,50 +16,22 @@ import java.util.concurrent.BlockingQueue;
 
 public class Controller {
     private BlockingQueue<ApplicationEvent> eventQueue;
-    private View view;
-    private Map<Class<? extends ApplicationEvent>, AppStrategy> MapStrategy;
-    private IBackwardChaining backwardChaining = new BackwardChaining();
+    private Map<Class<? extends ApplicationEvent>, IStrategy> MapStrategy = new HashMap<>();
 
     public Controller(BlockingQueue<ApplicationEvent> eventQueue, View view) {
-        super();
         this.eventQueue = eventQueue;
-        this.view = view;
-        MapStrategy = new HashMap<>();
-        MapStrategy.put(ButtonEvent.class, new ButtonStrategy());
+        MapStrategy.put(ButtonEvent.class, new ButtonStrategy(view));
     }
 
     public void work() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 ApplicationEvent applicationEvent = eventQueue.take();
-                AppStrategy appStrategy = MapStrategy.get(applicationEvent.getClass());
-                appStrategy.work(applicationEvent);
-            } catch (InterruptedException e) {
+                IStrategy iStrategy = MapStrategy.get(applicationEvent.getClass());
+                iStrategy.work(applicationEvent);
+            }
+        } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    abstract class AppStrategy {
-        abstract void work(ApplicationEvent applicationEvent);
-    }
-
-    class ButtonStrategy extends AppStrategy {
-
-        @Override
-        void work(ApplicationEvent applicationEvent) {
-            String dataString = ((ButtonEvent) applicationEvent).getDataString();
-            Knowledge knowledge = new Knowledge(dataString);
-            ISentence result = backwardChaining.deduce(knowledge);
-            addNode(result, null);
-        }
-
-        private void addNode(ISentence currentNode, DefaultMutableTreeNode parent) {
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode(currentNode.getSentence());
-            view.addChild(parent, node);
-            for (ISentence child : currentNode.getAntecedents()) {
-                addNode(child, node);
-            }
         }
     }
 

@@ -14,14 +14,14 @@ public class BCFormulaTest {
         Formula formula = new Formula("A");
         BCFormula bcFormula = new BCFormula(formula);
         assertTrue(bcFormula.getPresumptions().isEmpty());
-        assertEquals("A", bcFormula.getConsequent().getSentence());
+        assertEquals("A", bcFormula.getConsequent().getSentence().get());
     }
 
     @Test
     public void testBCFormula() {
         Formula formula = new Formula("A&B=>C");
         BCFormula bcFormula = new BCFormula(formula);
-        assertEquals("C", bcFormula.getConsequent().getSentence());
+        assertEquals("C", bcFormula.getConsequent().getSentence().get());
         assertEquals(true, bcFormula.getPresumptions().contains(new Sentence("A")));
         assertEquals(true, bcFormula.getPresumptions().contains(new Sentence("B")));
     }
