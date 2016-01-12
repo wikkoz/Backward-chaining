@@ -27,19 +27,14 @@ public class BackwardChaining implements IBackwardChaining {
         unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
     }
 
-    private boolean ifHasNotConfirmedPresumptions(BCFormula formula) {
-        return StreamSupport.stream(formula.getPresumptions().spliterator(), false)
-                .noneMatch(confirmed.keySet()::contains);
-    }
-
     private Stream<BCFormula> checkUnconfirmedSentence(Sentence s) {
         return implications.findUnusedFormulasWithConsequent(s)
                 .filter(s::ifHasNotUsedFormula);
-               // .filter(this::ifHasNotConfirmedPresumptions);
     }
 
     private void incrementUnconfirmed(Sentence sentence) {
         unconfirmed.compute(sentence, (k, v) -> v == null ? 1 : ++v);
+        confirmed.compute(sentence, (k, v) -> v == null ? null : ++v);
     }
 
     private void decrementUnconfirmed(Sentence sentence) {
@@ -56,33 +51,44 @@ public class BackwardChaining implements IBackwardChaining {
         formula.setUsed(true);
         Sentence consequent = formula.getConsequent();
         consequent.usedFormula(formula);
-        confirmed.put(consequent, unconfirmed.get(consequent));
+        confirmed.compute(consequent, (k, v) -> v == null ?unconfirmed.get(consequent) : unconfirmed.get(consequent) + v);
         unconfirmed.remove(consequent);
         usedBCFormulas.add(formula);
         formula.getPresumptions().iterator().forEachRemaining(this::incrementUnconfirmed);
+        allowUseFormulasIfConfirmed();
+    }
+
+    private void allowUseFormulasIfConfirmed(){
+        List<Sentence> confirmedPresumptions = new ArrayList<>();
+        List<BCFormula> reverse = new ArrayList<>(usedBCFormulas);
+        Collections.reverse(reverse);
+        for(BCFormula formula:reverse){
+            if(formula.isNotUsed())
+                confirmedPresumptions.add(formula.getConsequent());
+            else if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
+                formula.getConsequent().clearUsedFormulas();
+                formula.setUsed(false);
+                confirmedPresumptions.add(formula.getConsequent());
+            }
+            else
+                return;
+        }
     }
 
     private void reverseLastStep() throws EmptyStackException {
         BCFormula formula;
-        List<Sentence> confirmedPresumptions = new ArrayList<>();
         do {
             formula = usedBCFormulas.pop();
             formula.getPresumptions().iterator().forEachRemaining(this::decrementUnconfirmed);
             Sentence consequent = formula.getConsequent();
-            unconfirmed.put(consequent, confirmed.get(consequent));
-            confirmed.remove(formula.getConsequent());
-            confirmedPresumptions.add(formula.getConsequent());
-            formula.getPresumptions().stream().forEach(Sentence::clearUsedFormulas);
+            unconfirmed.compute(consequent, (k,v)-> v==null ? confirmed.get(consequent): v);
+            confirmed.remove(consequent);
         } while (formula.isNotUsed());
-        if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
-            formula.getConsequent().clearUsedFormulas();
-            formula.setUsed(false);
-        }
     }
 
     private boolean checkIfPeekHasNotAnotherFormula() {
         return !usedBCFormulas.isEmpty() &&
-                !checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent())
+                checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent())
                         .findFirst().isPresent();
     }
 
@@ -95,7 +101,6 @@ public class BackwardChaining implements IBackwardChaining {
                 do {
                     reverseLastStep();
                 } while (checkIfPeekHasNotAnotherFormula());
-                reverseLastStep();
             }
         }
     }
