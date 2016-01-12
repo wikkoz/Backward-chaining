@@ -49,6 +49,7 @@ public class Sentence implements ISentence {
 
 
     public void usedFormula(BCFormula formula) {
+        if(!formula.getPresumptions().isEmpty())
         usedFormulas.add(formula);
     }
 

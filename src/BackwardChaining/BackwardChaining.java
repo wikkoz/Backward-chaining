@@ -34,8 +34,8 @@ public class BackwardChaining implements IBackwardChaining {
 
     private Stream<BCFormula> checkUnconfirmedSentence(Sentence s) {
         return implications.findUnusedFormulasWithConsequent(s)
-                .filter(s::ifHasNotUsedFormula)
-                .filter(this::ifHasNotConfirmedPresumptions);
+                .filter(s::ifHasNotUsedFormula);
+               // .filter(this::ifHasNotConfirmedPresumptions);
     }
 
     private void incrementUnconfirmed(Sentence sentence) {
@@ -80,9 +80,10 @@ public class BackwardChaining implements IBackwardChaining {
         }
     }
 
-    private boolean checkIfPeekHasAnotherFormula() {
-        return !usedBCFormulas.isEmpty() && !usedBCFormulas.peek().isNotUsed() &&
-                checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent()).findFirst().isPresent();
+    private boolean checkIfPeekHasNotAnotherFormula() {
+        return !usedBCFormulas.isEmpty() &&
+                !checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent())
+                        .findFirst().isPresent();
     }
 
     private void findOutIfThesisCanBeConfirmed() throws EmptyStackException {
@@ -93,7 +94,8 @@ public class BackwardChaining implements IBackwardChaining {
             else {
                 do {
                     reverseLastStep();
-                } while (checkIfPeekHasAnotherFormula());
+                } while (checkIfPeekHasNotAnotherFormula());
+                reverseLastStep();
             }
         }
     }
