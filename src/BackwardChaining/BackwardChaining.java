@@ -23,8 +23,8 @@ public class BackwardChaining implements IBackwardChaining {
     }
 
     public void pullOutKnowledge(IKnowledge IKnowledge) {
-        makeCompleteKnowledge(IKnowledge.getFormulas());
-        unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
+        makeCompleteKnowledge(IKnowledge.getFormulas().get());
+        unconfirmed.put(new Sentence(IKnowledge.getThesis().get()), 1);
     }
 
     private boolean ifHasNotConfirmedPresumptions(BCFormula formula) {
@@ -122,13 +122,13 @@ public class BackwardChaining implements IBackwardChaining {
     }
 
     @Override
-    public ISentence deduce(IKnowledge IKnowledge) {
+    public Optional<ISentence> deduce(IKnowledge IKnowledge) {
         clear();
         pullOutKnowledge(IKnowledge);
         if (confirmThesis()) {
-            Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis()));
+            Tree tree = new Tree(usedBCFormulas, new Sentence(IKnowledge.getThesis().get()));
             return tree.makeTree();
         }
-        return new Sentence();
+        return Optional.of(new Sentence());
     }
 }

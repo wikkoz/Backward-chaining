@@ -10,30 +10,30 @@ import Model.Knowledge;
 import BackwardChaining.BackwardChaining;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.List;
 
 public class ButtonStrategy implements IStrategy {
 
     private final View view;
-    private IBackwardChaining backwardChaining;
+    private IBackwardChaining backwardChaining = new BackwardChaining();
 
     public ButtonStrategy(View view) {
         this.view = view;
-        this.backwardChaining = new BackwardChaining();
     }
 
     @Override
     public void work(ApplicationEvent applicationEvent) {
         String dataString = ((ButtonEvent) applicationEvent).getDataString();
         Knowledge knowledge = new Knowledge(dataString);
-        ISentence result = backwardChaining.deduce(knowledge);
+        ISentence result = backwardChaining.deduce(knowledge).get();
         addNode(result, null);
     }
 
     private void addNode(ISentence currentNode, DefaultMutableTreeNode parent) {
-        DefaultMutableTreeNode node = new DefaultMutableTreeNode(currentNode.getSentence());
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(currentNode.getSentence().get());
         view.addChild(parent, node);
-        for (ISentence child : currentNode.getAntecedents()) {
-            addNode(child, node);
-        }
+        List<ISentence> sentenceList = currentNode.getAntecedents().get();
+        sentenceList.stream()
+                .forEach(s -> addNode(s, node));
     }
 }

@@ -2,10 +2,7 @@ package BackwardChaining;
 
 import Interafaces.ISentence;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Sentence implements ISentence {
 
@@ -30,19 +27,18 @@ public class Sentence implements ISentence {
     }
 
     @Override
-    public List<ISentence> getAntecedents() {
-        return Collections.emptyList();
+    public Optional<List<ISentence>> getAntecedents() {
+        return Optional.of(Collections.emptyList());
     }
 
-    public String getSentence() {
-        return (negated ? "~" : "") + sentenceString;
+    public Optional<String> getSentence() {
+        return Optional.of((negated ? "~" : "") + sentenceString);
     }
 
     public Sentence negate() {
         negated = !negated;
         return this;
     }
-
 
     public void usedFormula(BCFormula formula) {
         usedFormulas.add(formula);

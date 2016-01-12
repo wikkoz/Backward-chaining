@@ -19,7 +19,7 @@ public class ImplicationsTest {
     public void testConsequent() {
         BCFormula formula = new BCFormula(new Formula("A"));
         Map<Sentence, List<BCFormula>> result;
-        result = implications.makeAllPossibleImplications(formula);
+        result = implications.makeAllPossibleImplications(formula).get();
         assertEquals(true, result.size() == 1);
         assertEquals(result.get(formula.getConsequent()).get(0), formula);
     }
@@ -32,7 +32,7 @@ public class ImplicationsTest {
         BCFormula implicationA = new BCFormula(new Formula("B&~C=>~A"));
         BCFormula formula = new BCFormula(new Formula("A&B=>C"));
         Map<Sentence, List<BCFormula>> result;
-        result = implications.makeAllPossibleImplications(formula);
+        result = implications.makeAllPossibleImplications(formula).get();
         assertEquals(true, result.size() == 3);
         assertEquals(result.get(formula.getConsequent()).get(0), formula);
         assertEquals(result.get(A).get(0), implicationA);
