@@ -16,13 +16,10 @@ import java.util.concurrent.BlockingQueue;
 
 public class Controller {
     private BlockingQueue<ApplicationEvent> eventQueue;
-    private View view;
-    private Map<Class<? extends ApplicationEvent>, IStrategy> MapStrategy;
+    private Map<Class<? extends ApplicationEvent>, IStrategy> MapStrategy = new HashMap<>();
 
     public Controller(BlockingQueue<ApplicationEvent> eventQueue, View view) {
         this.eventQueue = eventQueue;
-        this.view = view;
-        MapStrategy = new HashMap<>();
         MapStrategy.put(ButtonEvent.class, new ButtonStrategy(view));
     }
 

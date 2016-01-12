@@ -4,6 +4,7 @@ import Interafaces.ISentence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CompositeSentence implements ISentence {
 
@@ -16,12 +17,12 @@ public class CompositeSentence implements ISentence {
     }
 
     @Override
-    public List<ISentence> getAntecedents() {
-        return antecedents;
+    public Optional<List<ISentence>> getAntecedents() {
+        return Optional.of(antecedents);
     }
 
     @Override
-    public String getSentence() {
+    public Optional<String> getSentence() {
         return sentence.getSentence();
     }
 

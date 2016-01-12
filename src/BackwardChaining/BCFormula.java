@@ -4,23 +4,21 @@ import Interafaces.IFormula;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class BCFormula {
 
-    private Set<Sentence> presumptions;
+    private Set<Sentence> presumptions = new HashSet<>();
     private Sentence consequent;
     private boolean used;
 
     public BCFormula(IFormula formulas) {
-        presumptions = new HashSet<>();
         addSentences(formulas);
-        consequent = new Sentence(formulas.getConsequent());
+        consequent = new Sentence(formulas.getConsequent().get());
     }
 
     private void addSentences(IFormula formulas) {
-        Optional.ofNullable(formulas.getPresumptions())
+        formulas.getPresumptions()
                 .orElse(Collections.emptySet())
                 .forEach(s -> presumptions.add(new Sentence(s)));
     }
