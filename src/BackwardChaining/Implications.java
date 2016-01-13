@@ -10,10 +10,14 @@ public class Implications {
 
     public Map<Sentence, List<BCFormula>> makeAllPossibleImplications(BCFormula formula) {
         addElement(formula);
+        addFormulas(formula);
+        return implications;
+    }
+
+    private void addFormulas(BCFormula formula) {
         StreamSupport.stream(formula.getPresumptions().spliterator(), false)
                 .map(s -> makeAntecedentAsConsequent(s, formula))
                 .forEach(this::addElement);
-        return implications;
     }
 
     private BCFormula makeAntecedentAsConsequent(Sentence antecedent, BCFormula formula) {

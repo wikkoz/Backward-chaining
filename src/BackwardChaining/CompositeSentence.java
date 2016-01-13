@@ -10,10 +10,9 @@ public class CompositeSentence implements ISentence {
     private List<ISentence> antecedents;
     private Sentence sentence;
 
-
     public CompositeSentence(Sentence sentence) {
         this.sentence = sentence;
-        antecedents = new ArrayList<>();
+        this.antecedents = new ArrayList<>();
     }
 
     @Override

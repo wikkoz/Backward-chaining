@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class Sentence implements ISentence {
 
-    private String sentence;
+    private String sentenceString;
     private boolean negated = false;
     private Set<BCFormula> usedFormulas = new HashSet<>();
 
@@ -19,18 +19,14 @@ public class Sentence implements ISentence {
     public Sentence(String sentence) {
         if (sentence.charAt(0) == '~') {
             negated = true;
-            this.sentence = sentence.substring(1);
+            this.sentenceString = sentence.substring(1);
         } else
-            this.sentence = sentence;
+            this.sentenceString = sentence;
     }
 
     public Sentence(Sentence sentence) {
-        this.sentence = sentence.getOnlySentence();
+        this.sentenceString = sentence.sentenceString;
         this.negated = sentence.negated;
-    }
-
-    private String getOnlySentence() {
-        return sentence;
     }
 
     @Override
@@ -39,7 +35,7 @@ public class Sentence implements ISentence {
     }
 
     public String getSentence() {
-        return (negated ? "~" : "") + sentence;
+        return (negated ? "~" : "") + sentenceString;
     }
 
     public Sentence negate() {
@@ -68,13 +64,13 @@ public class Sentence implements ISentence {
 
         Sentence sentence1 = (Sentence) o;
 
-        return negated == sentence1.negated && sentence.equals(sentence1.sentence);
+        return negated == sentence1.negated && sentenceString.equals(sentence1.sentenceString);
 
     }
 
     @Override
     public int hashCode() {
-        int result = sentence.hashCode();
+        int result = sentenceString.hashCode();
         result = 31 * result + (negated ? 1 : 0);
         return result;
     }
