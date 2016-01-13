@@ -27,15 +27,10 @@ public class BackwardChaining implements IBackwardChaining {
         unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
     }
 
-    private boolean ifHasNotConfirmedPresumptions(BCFormula formula) {
-        return StreamSupport.stream(formula.getPresumptions().spliterator(), false)
-                .noneMatch(confirmed.keySet()::contains);
-    }
 
     private Stream<BCFormula> checkUnconfirmedSentence(Sentence s) {
         return implications.findUnusedFormulasWithConsequent(s)
                 .filter(s::ifHasNotUsedFormula);
-                //.filter(this::ifHasNotConfirmedPresumptions);
     }
 
     private void incrementUnconfirmed(Sentence sentence) {
@@ -80,7 +75,7 @@ public class BackwardChaining implements IBackwardChaining {
         }
     }
 
-    private void reverseLastStep() throws EmptyStackException {
+    private void reverseUnusedSteps() throws EmptyStackException {
         BCFormula formula;
         do {
             formula = usedBCFormulas.pop();
@@ -88,15 +83,10 @@ public class BackwardChaining implements IBackwardChaining {
             Sentence consequent = formula.getConsequent();
             unconfirmed.compute(consequent, (k,v)-> v==null ? confirmed.get(consequent): v + confirmed.getOrDefault(consequent, 0));
             confirmed.remove(consequent);
-        } while (formula.isNotUsed() || checkIfPeekHasNotAnotherFormula(formula));
-      /*  if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
-            formula.getConsequent().clearUsedFormulas();
-            formula.setUsed(false);
-            confirmedPresumptions.add(formula.getConsequent());
-        }*/
+        } while (formula.isNotUsed() || checkIfFormulaCannotBeProved(formula));
     }
 
-    private boolean checkIfPeekHasNotAnotherFormula(BCFormula formula) {
+    private boolean checkIfFormulaCannotBeProved(BCFormula formula) {
         return !checkUnconfirmedSentence(formula.getConsequent())
                         .findFirst().isPresent() ;
     }
@@ -107,8 +97,7 @@ public class BackwardChaining implements IBackwardChaining {
             if (formula.isPresent())
                 confirmConsequent(formula.get());
             else {
-                reverseLastStep();
-                //reverseLastStep();
+                reverseUnusedSteps();
             }
         }
     }
