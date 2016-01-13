@@ -27,14 +27,19 @@ public class BackwardChaining implements IBackwardChaining {
         unconfirmed.put(new Sentence(IKnowledge.getThesis()), 1);
     }
 
+    private boolean ifHasNotConfirmedPresumptions(BCFormula formula) {
+        return StreamSupport.stream(formula.getPresumptions().spliterator(), false)
+                .noneMatch(confirmed.keySet()::contains);
+    }
+
     private Stream<BCFormula> checkUnconfirmedSentence(Sentence s) {
         return implications.findUnusedFormulasWithConsequent(s)
                 .filter(s::ifHasNotUsedFormula);
+                //.filter(this::ifHasNotConfirmedPresumptions);
     }
 
     private void incrementUnconfirmed(Sentence sentence) {
         unconfirmed.compute(sentence, (k, v) -> v == null ? 1 : ++v);
-        confirmed.compute(sentence, (k, v) -> v == null ? null : ++v);
     }
 
     private void decrementUnconfirmed(Sentence sentence) {
@@ -81,15 +86,19 @@ public class BackwardChaining implements IBackwardChaining {
             formula = usedBCFormulas.pop();
             formula.getPresumptions().iterator().forEachRemaining(this::decrementUnconfirmed);
             Sentence consequent = formula.getConsequent();
-            unconfirmed.compute(consequent, (k,v)-> v==null ? confirmed.get(consequent): v);
+            unconfirmed.compute(consequent, (k,v)-> v==null ? confirmed.get(consequent): v + confirmed.getOrDefault(consequent, 0));
             confirmed.remove(consequent);
-        } while (formula.isNotUsed());
+        } while (formula.isNotUsed() || checkIfPeekHasNotAnotherFormula(formula));
+      /*  if (formula.getPresumptions().stream().allMatch(confirmedPresumptions::contains)) {
+            formula.getConsequent().clearUsedFormulas();
+            formula.setUsed(false);
+            confirmedPresumptions.add(formula.getConsequent());
+        }*/
     }
 
-    private boolean checkIfPeekHasNotAnotherFormula() {
-        return !usedBCFormulas.isEmpty() &&
-                checkUnconfirmedSentence(usedBCFormulas.peek().getConsequent())
-                        .findFirst().isPresent();
+    private boolean checkIfPeekHasNotAnotherFormula(BCFormula formula) {
+        return !checkUnconfirmedSentence(formula.getConsequent())
+                        .findFirst().isPresent() ;
     }
 
     private void findOutIfThesisCanBeConfirmed() throws EmptyStackException {
@@ -98,9 +107,8 @@ public class BackwardChaining implements IBackwardChaining {
             if (formula.isPresent())
                 confirmConsequent(formula.get());
             else {
-                do {
-                    reverseLastStep();
-                } while (checkIfPeekHasNotAnotherFormula());
+                reverseLastStep();
+                //reverseLastStep();
             }
         }
     }
