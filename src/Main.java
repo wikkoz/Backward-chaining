@@ -1,4 +1,4 @@
-import Events.ApplicationEvent;
+import Interafaces.IApplicationEvent;
 import Presenter.Controller;
 import View.View;
 
@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Main {
 
     public static void main(String[] args) {
-        BlockingQueue<ApplicationEvent> eventQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<IApplicationEvent> eventQueue = new LinkedBlockingQueue<>();
         View view = new View(eventQueue);
         Controller controller = new Controller(eventQueue, view);
         controller.work();

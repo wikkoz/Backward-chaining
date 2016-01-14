@@ -1,6 +1,6 @@
 package View;
 
-import Events.ApplicationEvent;
+import Interafaces.IApplicationEvent;
 import Events.ButtonEvent;
 
 import javax.swing.*;
@@ -17,11 +17,11 @@ public class View {
     private JButton btnNewButton;
     private DefaultMutableTreeNode root;
 
-    public View(final BlockingQueue<ApplicationEvent> eventQueue) {
+    public View(final BlockingQueue<IApplicationEvent> eventQueue) {
         initialize(eventQueue);
     }
 
-    private void initialize(final BlockingQueue<ApplicationEvent> eventQueue) {
+    private void initialize(final BlockingQueue<IApplicationEvent> eventQueue) {
         frame = new JFrame();
         frame.setBounds(100, 100, 819, 545);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

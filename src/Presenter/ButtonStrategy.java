@@ -1,8 +1,7 @@
 package Presenter;
 
 import View.View;
-import Events.ApplicationEvent;
-import Events.ButtonEvent;
+import Interafaces.IApplicationEvent;
 import Interafaces.IBackwardChaining;
 import Interafaces.ISentence;
 import Interafaces.IStrategy;
@@ -22,8 +21,8 @@ public class ButtonStrategy implements IStrategy {
     }
 
     @Override
-    public void work(ApplicationEvent applicationEvent) {
-        String dataString = ((ButtonEvent) applicationEvent).getDataString();
+    public void work(IApplicationEvent applicationEvent) {
+        String dataString = applicationEvent.getDataString();
         Knowledge knowledge = new Knowledge(dataString);
         ISentence result = backwardChaining.deduce(knowledge);
         addNode(result, null);

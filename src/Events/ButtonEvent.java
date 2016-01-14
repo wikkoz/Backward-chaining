@@ -1,15 +1,15 @@
 package Events;
 
-public class ButtonEvent extends ApplicationEvent {
+import Interafaces.IApplicationEvent;
+
+public class ButtonEvent implements IApplicationEvent {
     String dataString;
 
     public ButtonEvent(String dataString) {
-        super();
         this.dataString = dataString;
     }
 
     public String getDataString() {
         return dataString;
     }
-
 }

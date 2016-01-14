@@ -1,37 +1,30 @@
 package Presenter;
 
-import BackwardChaining.BackwardChaining;
-import Events.ApplicationEvent;
+import Interafaces.IApplicationEvent;
 import Events.ButtonEvent;
-import Interafaces.IBackwardChaining;
-import Interafaces.ISentence;
 import Interafaces.IStrategy;
-import Model.Knowledge;
 import View.View;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public class Controller {
-    private BlockingQueue<ApplicationEvent> eventQueue;
-    private View view;
-    private Map<Class<? extends ApplicationEvent>, IStrategy> MapStrategy;
+    private BlockingQueue<IApplicationEvent> eventQueue;
+    private Map<Class<? extends IApplicationEvent>, IStrategy> MapStrategy;
 
-    public Controller(BlockingQueue<ApplicationEvent> eventQueue, View view) {
+    public Controller(BlockingQueue<IApplicationEvent> eventQueue, View view) {
         this.eventQueue = eventQueue;
-        this.view = view;
-        MapStrategy = new HashMap<>();
-        MapStrategy.put(ButtonEvent.class, new ButtonStrategy(view));
+        this.MapStrategy = new HashMap<>();
+        this.MapStrategy.put(ButtonEvent.class, new ButtonStrategy(view));
     }
 
     public void work() {
         try {
             while (true) {
-                ApplicationEvent applicationEvent = eventQueue.take();
-                IStrategy iStrategy = MapStrategy.get(applicationEvent.getClass());
-                iStrategy.work(applicationEvent);
+                IApplicationEvent applicationEvent = eventQueue.take();
+                IStrategy strategy = MapStrategy.get(applicationEvent.getClass());
+                strategy.work(applicationEvent);
             }
         } catch (InterruptedException e) {
                 e.printStackTrace();
